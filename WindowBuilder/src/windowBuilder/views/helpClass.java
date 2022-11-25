@@ -18,15 +18,15 @@ import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 
 /**
- * This class allows the user to 'send an email' to the store. It has two input fields the<br>
+ * <p>This class allows the user to 'send an email' to the store. It has two input fields the<br>
  * user can input text into and a send button to send the email. One of the input fields is<br>
- * for the email address and the other one is for the email message itself.<p>
+ * for the email address and the other one is for the email message itself.</p>
  * 
- * The send button checks to make sure that (a) both the email address and the email message<br>
+ * <p>The send button checks to make sure that (a) both the email address and the email message<br>
  * aren't blank and (b) the email address is valid. After those tests, the email gets 'sent'<br>
- * and a message appears to let the user know that it was sent.<p>
+ * and a message appears to let the user know that it was sent.</p>
  * 
- * The 'send' is actually just a file output. The file's location is outside the directory.<p>
+ * <p>The 'send' is actually just a file output. The file's location is outside the directory.</p>
  * 
  * @author Matthew Bellman
  * @version 2022.11.17
@@ -34,9 +34,21 @@ import javax.swing.JScrollPane;
 public class helpClass extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 *  User input to store the email address to send to.
+	 */
 	private JTextField addressField;
+	
+	/**
+	 * User input to store the email contents itself.
+	 */
 	private JTextArea emailArea;
 
+	/**
+	 *  <p>The help class itself. Includes the GUI, and the code for the send button.<br>
+	 *  Does not have any public methods inside though, just private helper ones.</p>
+	 */
 	public helpClass() {
 		
 		JLabel lblNewLabel = new JLabel("Phone Number: 1-271-581-2221");
