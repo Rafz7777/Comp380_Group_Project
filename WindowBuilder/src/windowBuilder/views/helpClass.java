@@ -90,12 +90,12 @@ public class helpClass extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				
 				// Checks to see if the email address is valid.
-				if (!adressCheck())
+				if (!addressCheck())
 					return;
 				
 				// Checks to see if the email message is not blank.
 				if (emailArea.getText().isEmpty()) {
-					JOptionPane.showInternalMessageDialog(null, "Please enter an email message", "Error", 0);
+					JOptionPane.showInternalMessageDialog(null, "Please enter an email message.", "Error", 0);
 					return;
 				}
 				
@@ -135,7 +135,7 @@ public class helpClass extends JPanel {
 			}
 
 			// Checks to see if the email address is valid.
-			private boolean adressCheck() {
+			private boolean addressCheck() {
 				
 				String email = addressField.getText();
 				boolean check = true;
@@ -146,7 +146,7 @@ public class helpClass extends JPanel {
 				 * 3. Not empty after all '.'s
 				 */
 				if (email.isEmpty()) { // Pop up to tell the user that the email address field is empty
-					JOptionPane.showInternalMessageDialog(null, "Please enter an valid email adress", "Error", 0);
+					JOptionPane.showInternalMessageDialog(null, "Please enter an email address.", "Error", 0);
 					return false;
 				}
 				
@@ -171,7 +171,7 @@ public class helpClass extends JPanel {
 				
 				// Pop up to tell the user that the email address is not valid
 				if (!check) {
-					JOptionPane.showInternalMessageDialog(null, "Please enter an valid email adress", "Error", 0);
+					JOptionPane.showInternalMessageDialog(null, "Invalid email address.", "Error", 0);
 				}
 				
 				return check;
