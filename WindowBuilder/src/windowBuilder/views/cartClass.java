@@ -12,7 +12,6 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
-import javax.swing.ListModel;
 import javax.swing.border.BevelBorder;
 import javax.swing.JButton;
 import java.awt.Font;
@@ -32,7 +31,7 @@ import javax.swing.ImageIcon;
  * This class has buttons that allow the user to add a quantity, remove<br>
  * a selected product, empty the Cart, or proceed to the checkout area.<p>
  * 
- * @author Ralph Ramirez
+ * @author Ralph Ramirez, Aaron Flores
  * @version 2022.10.31 
  */
 public class cartClass extends JPanel { 
@@ -71,39 +70,23 @@ public class cartClass extends JPanel {
 		createEvents(); //calls createEvents()() method; builds all events that happen (actions)
 		textAreaCartTotal.setText("$0.00"); //sets the initial total of the Shopping List to $0.00
 		JListCartQuantity.setModel(ToCartQuantityList_items_4); //sets the Cart quantity using 'ToCartQuantityList_items_4'
-		
-		
-	}
-	
-	public void checkoutElements() {
-		
-		
-		//addTo() -----> adding to checkout List DefaultListModel from CartList_items_2
-		//addTo() -----> adding to checkout quantity DefaultListModel from ToCartQuantityList_items_4
-		//textArea for total in checkoutClass.setText(sum from cartClass)
-		//establish tax percentage total ----> some type of method needs to be run or code that calculates tax percentage for the current sum
-		//textArea for taxes added in checkoutClass.setText(the value calculated from the code or method from above)
-		//emptyCart()
-			
-		System.out.println("Products going to checkout: " + CartList_items_2);
-		System.out.println("Quantity going to checkout: " + ToCartQuantityList_items_4);
-		System.out.println("Total Price going to checkout: " + sum);
-		
+				
 	}
 	
 	/**
-	 * Used to add one DefaultListModel to another.<br>
+	 * Sets variable 'sum' to 0 before adding up the total amount of all products in priceArray[].<br>
+	 * This loop resets 'sum' to the newly added up total.<br> * 
 	 * 
-	 * @param <T>     used to represent the type of object stored
-	 * @param from    the list that represents the change coming 'from'
-	 * @param to      the list that represents the change going 'to'
 	 */
-	protected static <T> void addTo(ListModel<T> from, DefaultListModel<T> to) { //method used to add one ListModel to another DefaultListModel
-	    for (int index = 0; index < from.getSize(); index++) {
-	        to.addElement(from.getElementAt(index));
-	    }
+	public static void setSum() {
+		
+		sum = 0; //sets the variable initially to 0
+		for(int i = 0; i < cartPriceArray.length; i++){ //loop to add up the total price that is in cartPriceArray
+			sum += cartPriceArray[i]; //adds up the cartPriceArray[] and stores it in the variable sum
+		}		
+		
 	}
-	
+
 	/**
 	 * Adds the prices of the products added to the Cart from combobox (via productSearchClass).<br>
 	 * Finds the price of the selected product from productSearchClass.prices[index] and adds it to cartPriceArray[].<br>
@@ -117,10 +100,7 @@ public class cartClass extends JPanel {
 		int cost_value = Integer.parseInt(cost.toString()); //this converts the object to integer
 		cartPriceArray[counter] = cost_value; //this loads the cartPriceArray[]
 		counter++; //increments counter variable
-		sum = 0; //sets the variable initially to 0
-		for(int i = 0; i < cartPriceArray.length; i++){ //loop to add up the total price that is in cartPriceArray
-			sum += cartPriceArray[i]; //adds up the cartPriceArray[] and stores it in the variable sum
-		}
+		setSum();
 		
 	}
 	
@@ -139,10 +119,7 @@ public class cartClass extends JPanel {
 		int currentPrice = Integer.parseInt(adjust.toString()); //this converts the object to integer
 		int added = currentPrice + priceOfProduct;
 		cartPriceArray[index] = added; //this loads the cartPriceArray[]
-		sum = 0; //sets the variable initially to 0
-		for(int i = 0; i < cartPriceArray.length; i++){ //loop to add up the total price that is in priceArray
-			sum += cartPriceArray[i]; //adds up the priceArray[] and stores it in the variable sum
-		}
+		setSum();
 		
 	}
 	
@@ -161,10 +138,7 @@ public class cartClass extends JPanel {
 		int currentPrice = Integer.parseInt(adjust.toString()); //this converts the object to integer
 		int remove = currentPrice - priceOfProduct;
 		cartPriceArray[index] = remove; //this loads the cartPriceArray[]
-		sum = 0; //sets the variable initially to 0
-		for(int i = 0; i < cartPriceArray.length; i++){ //loop to add up the total price that is in priceArray
-			sum += cartPriceArray[i]; //adds up the priceArray[] and stores it in the variable sum
-		}
+		setSum();
 			
 	}
 	

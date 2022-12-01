@@ -141,6 +141,20 @@ public class productSearchClass extends JPanel {
 		panel_3.setVisible(false); //hides the elements in panel_3 (display image area)
 		panel_4.setVisible(false); //hides the elements in panel_4 (product description area)		
 	}
+	
+	/**
+	 * Sets variable 'sum' to 0 before adding up the total amount of all products in priceArray[].<br>
+	 * This loop resets 'sum' to the newly added up total.<br>
+	 * 
+	 */
+	public static void setSum() {
+		
+		sum = 0; //sets the variable initially to 0
+		for(int i = 0; i < priceArray.length; i++){ //loop to add up the total price that is in priceArray
+			sum += priceArray[i]; //adds up the priceArray[] and stores it in the variable sum
+		}	
+		
+	}
 		
 	/**
 	 * Adds the prices of the products added to the Shopping List from combobox.<br>
@@ -155,10 +169,7 @@ public class productSearchClass extends JPanel {
 		int second = Integer.parseInt(first.toString()); //this converts the object to integer
 		priceArray[counter] = second; //this loads the priceArray[]		
 		counter++; //increments counter variable
-		sum = 0; //sets the variable initially to 0
-		for(int i = 0; i < priceArray.length; i++){ //loop to add up the total price that is in priceArray
-			sum += priceArray[i]; //adds up the priceArray[] and stores it in the variable sum
-		}		
+		setSum();	
 	}
 	
 	/**
@@ -176,10 +187,7 @@ public class productSearchClass extends JPanel {
 		int currentPrice = Integer.parseInt(adjust.toString()); //this converts the object to integer
 		int added = currentPrice + priceOfProduct;
 		priceArray[index] = added; //this loads the cartPriceArray[]
-		sum = 0; //sets the variable initially to 0
-		for(int i = 0; i < priceArray.length; i++){ //loop to add up the total price that is in priceArray
-			sum += priceArray[i]; //adds up the priceArray[] and stores it in the variable sum
-		}
+		setSum();
 		
 	}
 	
@@ -198,10 +206,7 @@ public class productSearchClass extends JPanel {
 		int currentPrice = Integer.parseInt(adjust.toString()); //this converts the object to integer
 		int remove = currentPrice - priceOfProduct;
 		priceArray[index] = remove; //this loads the cartPriceArray[]
-		sum = 0; //sets the variable initially to 0
-		for(int i = 0; i < priceArray.length; i++){ //loop to add up the total price that is in priceArray
-			sum += priceArray[i]; //adds up the priceArray[] and stores it in the variable sum
-		}
+		setSum();
 		
 	}
 	
@@ -234,10 +239,7 @@ public class productSearchClass extends JPanel {
             trackPrices[i] = String.valueOf(priceArray[i]);
         }
 		
-		sum = 0;
-		for(int i = 0; i < priceArray.length; i++){  //for-loop to set the sum variable to the total of the Shopping List
-			sum += priceArray[i]; 
-		}		
+		setSum();		
 		
 		int addedUp = Arrays.stream(priceArray).sum(); //add  up the total sum of priceArray and set it to temp int variable: addedUp		
 		if (addedUp == 0) {	//if addUp is equal to 0			
