@@ -2,9 +2,7 @@ package windowBuilder.views;
 
 import static org.junit.Assert.*;
 import java.util.Arrays;
-
 import javax.swing.JTextArea;
-
 import org.junit.Before;
 import org.junit.Test;
 
