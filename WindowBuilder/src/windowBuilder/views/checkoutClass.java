@@ -42,6 +42,7 @@ public class checkoutClass extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Create the panel.
 	 */
@@ -56,30 +57,28 @@ public class checkoutClass extends JPanel {
 
 	}
 
-	private  String firstName;
-	private  String lastName;
-	private  String address;
-	private  String city;
-	private  String state;
-	private  String zipCode;
-	private  String phoneNum;
-	private  String email;
-	//////////////////////////////////////
+	private String firstName;
+	private String lastName;
+	private String address;
+	private String city;
+	private String state;
+	private String zipCode;
+	private String phoneNum;
+	private String email;
+
 	private String rNum = null;
 	private String aNum = null;
-
 	private String lastNumCard ="";
 	private String lastNumCheck= "";
 	private String add;
 
-	double ship;
-	double total;
+	private double ship;
+	private double total;
 
 	private String nameCard = null;
 	private String dateCard = null;
 	private String numberCard = null;
 	private String cvvCard = null;
-	///////////////////////////////////////	
 	private JTextField first;
 	private JTextField last;
 	private JTextField address1;
@@ -87,38 +86,40 @@ public class checkoutClass extends JPanel {
 	private JTextField state1;
 	private JTextField zipNum;
 	private JTextField cellNum;
+	private JTextField emailAddress;
 
-	boolean zipCheck;
-	boolean phoneCheck;
-	boolean firstCheck;
-	boolean lastCheck;
-	boolean addressCheck;
-	boolean cityCheck;
-	boolean stateCheck;
-	boolean emailCheck;
-
+	private boolean zipCheck;
+	private boolean phoneCheck;
+	private boolean firstCheck;
+	private boolean lastCheck;
+	private boolean addressCheck;
+	private boolean cityCheck;
+	private boolean stateCheck;
+	private boolean emailCheck;
+	
 	private JButton enter;
-	// Ralph's-Branch---Contains-all-classes-I'm-working-on
+	
+	private static JTextArea shipArea;
+	private static JTextArea totalPrice;
+	private static JTextArea taxArea;
+	private static JTextArea totalArea;
+	
 	private static JList<Object> checkoutList;
 	private static JList<Object> checkoutQuantity;
-	private static JTextArea shipArea;
-	private JTextField emailAddress;
 	private JLabel lblNewLabel;
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel_2;
 	private JLabel lblNewLabel_3;
-	private JTextArea totalArea;
 	private JLabel lblNewLabel_4;
 	private JLabel lblNewLabel_5;
 	private JLabel lblNewLabel_6;
 	private JLabel lblNewLabel_7;
 
-	private JList<Object> shopList;
+	//private JList<Object> shopList;
 
 	public static DefaultListModel<Object> shoppingList;  
 	public static DefaultListModel<Object> quantityList;
-	private static JTextArea totalPrice;
-	private static JTextArea taxArea;
+
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 
 	////////////////////////////////
@@ -128,6 +129,7 @@ public class checkoutClass extends JPanel {
 	private JRadioButton fast;
 	private JRadioButton rush;
 	/////////////////////////////////
+	
 	//Customer-Specifics
 
 	/*public void addListeners()
@@ -142,6 +144,10 @@ public class checkoutClass extends JPanel {
 
 		}
 	}*/
+	
+	/**
+	 * Moves the Cart list to the checkout List (same with quantity)
+	 */
 	public static void transferCart()
 	{
 		addTo(cartClass.CartList_items_2,shoppingList);
@@ -173,18 +179,35 @@ public class checkoutClass extends JPanel {
 		}
 	}
 
-
+	
+	private void updateShip(double s) {
+		
+		// Checks to see if the checkout list is empty. (also applies to "fast" and "rush")
+		if (checkoutList.getModel().getSize() == 0) {
+			buttonGroup.clearSelection();
+			return;
+		}
+		
+		ship = s;
+		System.out.println("$" + (int)s + " Shipping");
+		shipArea.setText("$" + ship + "0");
+		
+		addTotal();
+	}
 
 	private void createEvents() 
 	{ //this method initializes all event elements of the panel
 
+		// Move the ship updates to their own function.
 		standard.addActionListener(new ActionListener() { //Shipping Button
 			public void actionPerformed(ActionEvent e) {
 
 				if (standard.isSelected()) {
 					
+					updateShip(5);
+					
 					// Checks to see if the checkout list is empty. (also applies to "fast" and "rush")
-					if (checkoutList.getModel().getSize() == 0) {
+					/*if (checkoutList.getModel().getSize() == 0) {
 						buttonGroup.clearSelection();
 						return;
 					}
@@ -193,7 +216,7 @@ public class checkoutClass extends JPanel {
 					System.out.println("$5 Shipping");
 					shipArea.setText("$"+ ship+ "0");
 
-					addTotal();
+					addTotal();*/
 
 				}
 
@@ -205,6 +228,9 @@ public class checkoutClass extends JPanel {
 				
 				if (fast.isSelected()) {
 					
+					updateShip(15);
+					
+					/*
 					if (checkoutList.getModel().getSize() == 0) {
 						buttonGroup.clearSelection();
 						return;
@@ -214,7 +240,7 @@ public class checkoutClass extends JPanel {
 					System.out.println("$15 Shipping");
 					shipArea.setText("$"+ ship+ "0");
 
-					addTotal();
+					addTotal();*/
 
 				}
 			}
@@ -224,6 +250,8 @@ public class checkoutClass extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if (rush.isSelected()) {
 					
+					updateShip(25);
+					/*
 					if (checkoutList.getModel().getSize() == 0) {
 						buttonGroup.clearSelection();
 						return;
@@ -234,7 +262,8 @@ public class checkoutClass extends JPanel {
 
 					shipArea.setText("$"+ ship+ "0");
 
-					addTotal();
+					addTotal();*/
+					
 
 				}
 
@@ -291,7 +320,7 @@ public class checkoutClass extends JPanel {
 					}
 					else if(emailCheck == false)
 					{
-						JOptionPane.showMessageDialog(null, "Email Cannot be left Empty", "Alert", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Email Cannot Be Empty", "Alert", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					else if(cityCheck == false)
@@ -316,8 +345,48 @@ public class checkoutClass extends JPanel {
 					return;
 				
 				conformationEmail();
+				
+				resetPanel();
 
 			} //end of Action
+
+			private void resetPanel() {
+				
+				// Resets JLists and Default List Modules
+				checkoutList.removeAll();
+				checkoutQuantity.removeAll();
+				shoppingList.removeAllElements();
+				quantityList.removeAllElements();
+				
+				// Resets JTextFields
+				first.setText("");
+				last.setText("");
+				address1.setText("");
+				city1.setText("");
+				state1.setText("");
+				zipNum.setText("");
+				cellNum.setText("");
+				emailAddress.setText("");
+				
+				// Reset Radio Button Group
+				buttonGroup.clearSelection();
+				
+				// Reset Purchase Method
+				nameCard = null;
+				cvvCard = null;
+				numberCard = null;
+				dateCard = null;
+				aNum = null;
+				rNum = null;
+				
+				// Reset Prices
+				shipArea.setText("");
+				totalPrice.setText("");
+				taxArea.setText("");
+				totalArea.setText("");
+				
+			}
+			
 		});	//End of Listener
 
 
@@ -328,7 +397,7 @@ public class checkoutClass extends JPanel {
 				nameCard = null;
 				cvvCard= null;
 				numberCard= null;
-				dateCard = null;	
+				dateCard = null;
 				
 				aNum= "";
 				rNum= "";
@@ -467,7 +536,8 @@ public class checkoutClass extends JPanel {
 
 
 	}	//End of Event
-	public void Equalize()
+	
+	private void Equalize()
 	{
 		firstName = first.getText();
 		lastName = last.getText();
@@ -483,7 +553,7 @@ public class checkoutClass extends JPanel {
 	//int.parseint(cellNum)
 
 
-	public String addTotal() {
+	private String addTotal() {
 
 		String str = shipArea.getText(); 
 		String str1 = taxArea.getText();
@@ -515,7 +585,7 @@ public class checkoutClass extends JPanel {
 	} //End of Add total method
 
 
-	public boolean overallCheck() {
+	private boolean overallCheck() {
 
 		if (rNum == null && nameCard == null) {
 			JOptionPane.showMessageDialog(null, "Payment Cannot be left Empty", "Alert", JOptionPane.ERROR_MESSAGE);
@@ -535,7 +605,7 @@ public class checkoutClass extends JPanel {
 				JOptionPane.showMessageDialog(null, "Card Number Cannot be left Empty", "Alert", JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
-			else if (cvvCard != null){
+			else {
 				System.out.println("Card Name: " + nameCard); //Debugging
 				System.out.println("Card Number: " + numberCard); //Debugging
 				System.out.println("Card Date: " + dateCard); //Debug
@@ -557,9 +627,8 @@ public class checkoutClass extends JPanel {
 				System.out.println("Last 4 digits of Account Number: " + lastNumCheck); //Debugging
 				return true;
 			}
-		}
-
-
+		} 
+		
 		else { // (rNum != null && nameCard != null)
 
 			rNum=null;
@@ -573,12 +642,12 @@ public class checkoutClass extends JPanel {
 			return false;
 		}
 		
-		return false; // Safety Net
-		
 	}//end of overallCheck
 
-	public void conformationEmail() {
+	/// TODO: (R) Re-factor This ///
+	private void conformationEmail() {
 
+		// (Internal) E-Check
 		if (rNum != null && nameCard == null) {
 			System.out.println("Thank You "+ getFullName()+"!");//First and Last name
 			System.out.println(getAddress()); //Address
@@ -591,14 +660,15 @@ public class checkoutClass extends JPanel {
 			JOptionPane.showMessageDialog(null, 
 					"Thank You "+ getFullName()+"!\n" + "Your Items Will be Sent to This address: \n" +
 							getAddress() + " " + getCity()+ ", "+ getState() +"\n" +
-							"They will be sent to: "+ getEmail() +"\n" + 
+							"A conformation email will be sent to: "+ getEmail() +"\n" + 
 							"Payment Type is E-check ending in: " + lastNumCheck + "\n" +
 							"The Grand Total: " + add);
 
 
 		}
 
-		else if(nameCard != null && rNum == null) {
+		// (Internal) Credit-Card
+		else if (nameCard != null && rNum == null) {
 
 			System.out.println("Thank You "+ getFullName()+"!"); //First and Last name
 			System.out.println(getAddress()); //Address
@@ -612,15 +682,18 @@ public class checkoutClass extends JPanel {
 			JOptionPane.showMessageDialog(null, 
 					"Thank You "+ getFullName()+"!\n" + "Your Items Will be Sent to This address: \n" +
 							getAddress() + " " + getCity()+ ", "+ getState() +"\n" +
-							"They will be sent to: "+ getEmail() +"\n" + 
+							"A conformation email will be sent to: "+ getEmail() +"\n" + 
 							"Payment Type is Credit Card ending in: " + lastNumCard + "\n" +
 							"The Grand Total: " + add);
+		}
+		
+		
 
-		}			
+	}//End if conformation Email
 
-	}//End if COnformation Email
-
-	public boolean checkEmail()
+	
+	// TODO: Re-factor the checks
+	public boolean checkEmail() // !email.isEmpty()
 	{
 		if(email.length() == 0)
 		{
@@ -631,7 +704,7 @@ public class checkoutClass extends JPanel {
 			return true;
 		}
 	}
-	public boolean checkZip()
+	public boolean checkZip() // zipCode.length() == 5
 	{				 
 		if(zipCode.length() != 5 )
 		{
@@ -643,7 +716,7 @@ public class checkoutClass extends JPanel {
 		}
 	}
 
-	public boolean checkPhone()
+	public boolean checkPhone() // phoneNum.length() == 10
 	{
 		if(phoneNum.length() != 10 )
 		{
@@ -655,7 +728,7 @@ public class checkoutClass extends JPanel {
 		}
 	}
 
-	public boolean checkFirst()
+	public boolean checkFirst() // !firstName.isEmpty()
 	{
 		if(firstName.length() == 0 )
 		{
@@ -667,7 +740,7 @@ public class checkoutClass extends JPanel {
 		}
 	}
 
-	public boolean checkLast()
+	public boolean checkLast() // !lastName.isEmpty()
 	{
 		if(lastName.length() == 0 )
 		{
@@ -679,7 +752,7 @@ public class checkoutClass extends JPanel {
 		}
 	}
 
-	public boolean checkAddress()
+	public boolean checkAddress() // !address.isEmpty()
 	{
 		if(address.length() == 0 )
 		{
@@ -691,7 +764,7 @@ public class checkoutClass extends JPanel {
 		}
 	}
 
-	public boolean checkCity()
+	public boolean checkCity() // !city.isEmpty()
 	{
 		if(city.length() == 0 )
 		{
@@ -703,7 +776,7 @@ public class checkoutClass extends JPanel {
 		}
 	}
 
-	public boolean checkState()
+	public boolean checkState() // state.length() == 2
 	{
 		if(state.length() != 2 )
 		{
@@ -788,12 +861,15 @@ public class checkoutClass extends JPanel {
 		checkoutQuantity.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 
 		totalPrice = new JTextArea();
+		totalPrice.setEditable(false);
 		totalPrice.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 
 		taxArea = new JTextArea();
+		taxArea.setEditable(false);
 		taxArea.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 
 		shipArea = new JTextArea();
+		shipArea.setEditable(false);
 		shipArea.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 
 		emailAddress = new JTextField();
@@ -822,6 +898,7 @@ public class checkoutClass extends JPanel {
 		rush.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 
 		totalArea = new JTextArea();
+		totalArea.setEditable(false);
 		totalArea.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 
 		lblNewLabel_4 = new JLabel("Grand Total:");

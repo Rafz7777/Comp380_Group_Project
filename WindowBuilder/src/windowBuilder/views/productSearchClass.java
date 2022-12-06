@@ -847,7 +847,7 @@ private void initComponents() throws FileNotFoundException { // Method that stor
 		lblNoShipNotaxes = new JLabel("*Total does not include S&H or taxes");
 		lblNoShipNotaxes.setFont(new Font("Lucida Grande", Font.PLAIN, 9));
 		
-		JLabel lblNewLabel_1 = new JLabel("*Maximum 8 Products (for now)");
+		JLabel lblNewLabel_1 = new JLabel("*Maximum 8 Products");
 		lblNewLabel_1.setFont(new Font("Lucida Grande", Font.PLAIN, 9));
 	
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
