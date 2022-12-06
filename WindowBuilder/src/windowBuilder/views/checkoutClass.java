@@ -183,7 +183,7 @@ public class checkoutClass extends JPanel {
 
 				if (standard.isSelected()) {
 					
-					// Checks to see if the checkout list is empty.
+					// Checks to see if the checkout list is empty. (also applies to "fast" and "rush")
 					if (checkoutList.getModel().getSize() == 0) {
 						buttonGroup.clearSelection();
 						return;
@@ -323,6 +323,13 @@ public class checkoutClass extends JPanel {
 
 		eCheck.addActionListener(new ActionListener() { //Electronic Check Button
 			public void actionPerformed(ActionEvent e) {
+				
+				// Removes the Card Values
+				nameCard = null;
+				cvvCard= null;
+				numberCard= null;
+				dateCard = null;	
+				
 				aNum= "";
 				rNum= "";
 
@@ -372,6 +379,10 @@ public class checkoutClass extends JPanel {
 		creditCard.addActionListener(new ActionListener() { //Credit Card Button
 			public void actionPerformed(ActionEvent e) {
 
+				// Removes the check Values
+				aNum= null;
+				rNum= null;
+				
 				nameCard = "";
 				cvvCard= "";
 				numberCard= "";
