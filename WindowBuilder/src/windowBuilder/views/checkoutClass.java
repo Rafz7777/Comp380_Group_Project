@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
@@ -344,7 +345,7 @@ public class checkoutClass extends JPanel {
 				if (!overallCheck())
 					return;
 				
-				conformationEmail();
+				confirmationEmail();
 				
 				resetPanel();
 
@@ -638,58 +639,101 @@ public class checkoutClass extends JPanel {
 			dateCard=null;
 			cvvCard=null;
 
-			JOptionPane.showMessageDialog(null, "Please only Pick One Payment Type!", "Alert", JOptionPane.ERROR_MESSAGE);	
+			JOptionPane.showMessageDialog(null, "Please Pick only One Payment Type!", "Alert", JOptionPane.ERROR_MESSAGE);	
 			return false;
 		}
 		
 	}//end of overallCheck
 
 	/// TODO: (R) Re-factor This ///
-	private void conformationEmail() {
+	private void confirmationEmail() {
 
+		
 		// (Internal) E-Check
-		if (rNum != null && nameCard == null) {
-			System.out.println("Thank You "+ getFullName()+"!");//First and Last name
-			System.out.println(getAddress()); //Address
-			System.out.println(getCity()); //City
-			System.out.println(getState()); //State
-			System.out.println(getEmail()); //Email
-			System.out.println("Payment Type is E-check: " + lastNumCheck);  //Last 4 Numbers of check
-			System.out.println(add); //Overall total
-
+		if (nameCard == null) {
+			
 			JOptionPane.showMessageDialog(null, 
 					"Thank You "+ getFullName()+"!\n" + "Your Items Will be Sent to This address: \n" +
-							getAddress() + " " + getCity()+ ", "+ getState() +"\n" +
-							"A conformation email will be sent to: "+ getEmail() +"\n" + 
+							getAddress() + " " + getCity() + ", "+ getState() +"\n" +
+							"A confirmation email will be sent to: "+ getEmail() +"\n" + 
 							"Payment Type is E-check ending in: " + lastNumCheck + "\n" +
 							"The Grand Total: " + add);
-
-
 		}
 
 		// (Internal) Credit-Card
-		else if (nameCard != null && rNum == null) {
-
-			System.out.println("Thank You "+ getFullName()+"!"); //First and Last name
-			System.out.println(getAddress()); //Address
-			System.out.println(getCity()); //City
-			System.out.println(getState()); //State
-			System.out.println(getEmail()); //Email
-
-			System.out.println("Payment Type is Credit Card: "+ lastNumCard); //Last 4 Numbers of card
-			System.out.println("The Grand Total: "+ add); //Overall total
+		else {
 
 			JOptionPane.showMessageDialog(null, 
 					"Thank You "+ getFullName()+"!\n" + "Your Items Will be Sent to This address: \n" +
-							getAddress() + " " + getCity()+ ", "+ getState() +"\n" +
-							"A conformation email will be sent to: "+ getEmail() +"\n" + 
+							getAddress() + " " + getCity() + ", "+ getState() +"\n" +
+							"A confirmation email will be sent to: "+ getEmail() +"\n" + 
 							"Payment Type is Credit Card ending in: " + lastNumCard + "\n" +
 							"The Grand Total: " + add);
 		}
 		
+		// (External) Confirmation Email
+		LocalDateTime date = LocalDateTime.now();
 		
+		System.out.println("To: " + getEmail() + "\n\n");
 
-	}//End if conformation Email
+		System.out.println("Hello, " + getFullName() + "\n");
+		System.out.println("We would like to thank you for purchasing from Vintage Curios. This automated email also serves as your receipt.\n\n");
+
+		for (int i = 0; i < shoppingList.getSize(); i++) {
+			
+			String list_i = shoppingList.getElementAt(i).toString().substring(15);
+					
+			int price_i = (int) Float.parseFloat(list_i.substring(list_i.indexOf("$") + 1));
+			int quantity_i = Integer.parseInt(quantityList.getElementAt(i).toString());
+			
+			System.out.println(list_i.substring(0, list_i.indexOf("-")) + "x" + quantity_i + " | $"
+					   + (price_i * quantity_i) + ".00");
+		}
+
+		
+		System.out.println("\nTax: " + taxArea.getText());
+		System.out.print("Shipping: " + shipArea.getText());
+		System.out.println("Total (including tax and payment method): " + totalArea.getText());
+		System.out.print("Method of payment: ");
+
+		if (aNum == null) {
+			System.out.println("Credit/Debit Card");
+			System.out.println("Card: ************" + lastNumCard);
+		} else {
+			System.out.println("Electronic Check");
+			System.out.println("Account Number: ***********" + lastNumCheck);
+		}
+		
+		System.out.println("Delivery Location: " + getAddress() + " " + getCity() + ", " + getState());
+			
+		String currentDate = date.toString();
+		System.out.println("Date of purchase: " + currentDate.substring(0,currentDate.indexOf('T')) + "\n\n");
+
+		System.out.print("You should expect your products to arrive ");
+
+		String Delivery1;
+		if (!standard.isSelected()) {
+		 
+			if (fast.isSelected())
+				Delivery1 = date.plusDays(3).toString();
+			else
+				Delivery1 = date.plusDays(1).toString();
+
+			System.out.print("by or before " + Delivery1.substring(0,Delivery1.indexOf('T')) + ".");
+
+		} else {
+
+			Delivery1 = date.plusDays(7).toString();
+			String Delivery2 = date.plusDays(10).toString();
+			System.out.print("between " + Delivery1.substring(0,Delivery1.indexOf('T'))
+				+ " and " + Delivery2.substring(0,Delivery2.indexOf('T')) + "or sooner.");
+		}
+
+		System.out.println(" If for some reason there is a delay with your delivery, we will update you with a new delivery date.\n");
+		System.out.println("If you have any questions about your order, you can contact us either through the help panel or from our email address: support@vintage.curios\n");
+		System.out.print("Once again, thank you for purchasing from Vintage Curios.");
+
+	}//End if confirmation Email
 
 	
 	// TODO: Re-factor the checks
