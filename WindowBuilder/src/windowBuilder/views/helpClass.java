@@ -53,7 +53,7 @@ public class helpClass extends JPanel {
 		
 		JLabel lblNewLabel = new JLabel("Phone Number: 1-271-581-2221");
 		
-		JLabel lblNewLabel_1 = new JLabel("Email: support@oldvintage.shop");
+		JLabel lblNewLabel_1 = new JLabel("Email: support@vintage.curios");
 		
 		JTextArea txtrIfYouHave = new JTextArea();
 		txtrIfYouHave.setWrapStyleWord(true);

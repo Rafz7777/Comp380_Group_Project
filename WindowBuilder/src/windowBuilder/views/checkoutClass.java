@@ -1,4 +1,4 @@
- package windowBuilder.views;
+package windowBuilder.views;
 
 import javax.swing.JPanel;
 
@@ -22,7 +22,8 @@ import javax.swing.border.BevelBorder;
 import javax.swing.JTextArea;
 import javax.swing.JRadioButton;
 import java.awt.Font;
-
+import javax.swing.ButtonGroup;
+import java.util.Formatter;
 
 
 /**
@@ -30,11 +31,11 @@ import java.awt.Font;
  * 
  * 
  *  
- * @author Aaron Flores
- *date Started 10/28
+ * @author Aaron Flores, Christatian Sanchez
+ * @version Started 2022.10.28
  */
- //Customer-Specifics
 
+//Customer-Specifics
 public class checkoutClass extends JPanel {
 	
 
@@ -60,8 +61,22 @@ public class checkoutClass extends JPanel {
 	private  String zipCode;
 	private  String phoneNum;
 	private  String email;
-
+//////////////////////////////////////
+	private String rNum = null;
+	private String aNum = null;
 	
+	private String lastNumCard ="";
+	private String lastNumCheck= "";
+	private String add;
+	
+	double ship;
+	double total;
+	
+	private String nameCard = null;
+	private String dateCard = null;
+	private String numberCard = null;
+	private String cvvCard = null;
+///////////////////////////////////////	
 	private JTextField first;
 	private JTextField last;
 	private JTextField address1;
@@ -83,18 +98,16 @@ public class checkoutClass extends JPanel {
  // Ralph's-Branch---Contains-all-classes-I'm-working-on
 	private static JList checkoutList;
 	private static JList checkoutQuantity;
-	private JTextArea textArea_2;
+	private static JTextArea shipArea;
 	private JTextField emailAddress;
 	private JLabel lblNewLabel;
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel_2;
 	private JLabel lblNewLabel_3;
-	private JTextArea textArea_3;
+	private JTextArea totalArea;
 	private JLabel lblNewLabel_4;
 	private JLabel lblNewLabel_5;
 	private JLabel lblNewLabel_6;
-	private JRadioButton rdbtnNewRadioButton_3;
-	private JRadioButton rdbtnNewRadioButton_4;
 	private JLabel lblNewLabel_7;
 
 	private JList shopList;
@@ -103,7 +116,15 @@ public class checkoutClass extends JPanel {
 	public static DefaultListModel<Object> quantityList;
 	private static JTextArea totalPrice;
 	private static JTextArea taxArea;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
 	
+	////////////////////////////////
+	private JButton creditCard;
+	private JButton eCheck;
+	private JRadioButton standard;
+	private JRadioButton fast;
+	private JRadioButton rush;
+	/////////////////////////////////
  //Customer-Specifics
 	
 	/*public void addListeners()
@@ -133,6 +154,7 @@ public class checkoutClass extends JPanel {
 			String taxTransfer = shorten.format(taxTot);
 			taxArea.setText("$"+ taxTransfer);
 			
+			
 		}
 		
 		/**
@@ -149,9 +171,55 @@ public class checkoutClass extends JPanel {
 		}
 		
 		
+		
 		private void createEvents() 
 		{ //this method initializes all event elements of the panel
-		
+			
+			standard.addActionListener(new ActionListener() { //Shipping Button
+				public void actionPerformed(ActionEvent e) {
+					
+					if (standard.isSelected()) {
+						ship = 5.00;
+						System.out.println("$5 Shipping");
+						shipArea.setText("$"+ ship+ "0");
+						
+						addTotal();
+					
+					}
+					
+				}
+			});
+			
+			fast.addActionListener(new ActionListener() {//Shipping Button
+				public void actionPerformed(ActionEvent e) {
+					
+					if (fast.isSelected()) {
+						ship = 15.00;
+						System.out.println("$15 Shipping");
+						shipArea.setText("$"+ ship+ "0");
+						
+						addTotal();
+						
+					}
+					
+				}
+			});
+			
+			rush.addActionListener(new ActionListener() {//Shipping Button
+				public void actionPerformed(ActionEvent e) {
+					if (rush.isSelected()) {
+						ship = 25.00;
+						System.out.println("$25 Shipping");
+						
+						shipArea.setText("$"+ ship+ "0");
+						
+						addTotal();
+						
+					}
+					
+				}
+			});
+			
 			enter.addActionListener(new ActionListener()
 			{ //this action method for button: 'enter' pays and checks inputs 
 				public void actionPerformed(ActionEvent e) 
@@ -160,6 +228,7 @@ public class checkoutClass extends JPanel {
 					
 					try
 					{
+				
 						Equalize();
 						 zipCheck = checkZip();
 						 phoneCheck = checkPhone();
@@ -173,15 +242,7 @@ public class checkoutClass extends JPanel {
 					}
 					 finally
 					 {
-						 if(zipCheck == false)
-							{
-								JOptionPane.showMessageDialog(null, "Zip Code Must Be 5 Digits, Input Again", "Alert", JOptionPane.ERROR_MESSAGE); //Displays a pop-up messa
-							}
-						 else if(phoneCheck == false)
-							{
-								JOptionPane.showMessageDialog(null, "Phone Number Must Be 10 Digits, Input Again ", "Alert", JOptionPane.ERROR_MESSAGE); //Displays a pop-up messa
-							}
-						 else if(firstCheck == false)
+						 if(firstCheck == false)
 						 {
 							 JOptionPane.showMessageDialog(null, "First Name Cannot Be Empty, Input Again ", "Alert", JOptionPane.ERROR_MESSAGE);
 						 }
@@ -192,24 +253,176 @@ public class checkoutClass extends JPanel {
 						 else if(addressCheck == false)
 						 {
 							 JOptionPane.showMessageDialog(null, "Address Cannot Be Empty, Input Again ", "Alert", JOptionPane.ERROR_MESSAGE);
-						 }	
-						 else if(cityCheck == false)
-						 {
-							 JOptionPane.showMessageDialog(null, "City Cannot Be Empty, Input Again ", "Alert", JOptionPane.ERROR_MESSAGE);
 						 }
 						 else if(stateCheck == false)
 						 {
 							 JOptionPane.showMessageDialog(null, "State Not Accepted , Input 2-Letter Abbreviation ", "Alert", JOptionPane.ERROR_MESSAGE);
 						 }
+						 else if(phoneCheck == false)
+							{
+								JOptionPane.showMessageDialog(null, "Phone Number Must Be 10 Digits, Input Again ", "Alert", JOptionPane.ERROR_MESSAGE); //Displays a pop-up messa
+							}
 						 else if(emailCheck == false)
 						 {
 							 JOptionPane.showMessageDialog(null, "Email Cannot be left Empty", "Alert", JOptionPane.ERROR_MESSAGE);
 						 }
+						 else if(cityCheck == false)
+						 {
+							 JOptionPane.showMessageDialog(null, "City Cannot Be Empty, Input Again ", "Alert", JOptionPane.ERROR_MESSAGE);
+						 }
+						 else if(zipCheck == false)
+							{
+								JOptionPane.showMessageDialog(null, "Zip Code Must Be 5 Digits, Input Again", "Alert", JOptionPane.ERROR_MESSAGE); //Displays a pop-up messa
+							}
 					 }
+					//////////////////////////////////////////
 					
+					overallCheck();
+					
+					if (!standard.isSelected() && !fast.isSelected() && !rush.isSelected()) {
+						JOptionPane.showMessageDialog(null, "Please Select A Shipping Option", "Alert", JOptionPane.ERROR_MESSAGE);	
+					}
+					conformationEmail();
+					
+				} //end of Action
+			});	//End of Listener
+			
+			
+			eCheck.addActionListener(new ActionListener() { //Electronic Check Button
+				public void actionPerformed(ActionEvent e) {
+					aNum= "";
+					rNum= "";
+					
+					while (rNum.length() == 0 || rNum.length() != 9) {
+
+						rNum = JOptionPane.showInputDialog("Routing Number", null);
+
+						if (rNum.length()== 0) {
+							JOptionPane.showMessageDialog(null, "Cannot Be Empty, Input Again", "Alert", JOptionPane.ERROR_MESSAGE);
+						}
+						else if (rNum.length() != 9) {
+						JOptionPane.showMessageDialog(null, "Routing Number Must be 9 Digits", "Alert", JOptionPane.ERROR_MESSAGE);	
+						}
+						else {
+							break;
+							}
+
+						}//End of While Loop
+
+					
+						while (aNum.length() == 0 || aNum.length() != 15) {
+
+						aNum = JOptionPane.showInputDialog("Account Number", null);
+
+						if (aNum.length()== 0) {
+							JOptionPane.showMessageDialog(null, "Cannot Be Empty, Input Again ", "Alert", JOptionPane.ERROR_MESSAGE);
+						}
+						else if (aNum.length() != 15) {
+						JOptionPane.showMessageDialog(null, "Account Number Must be 15 Digits", "Alert", JOptionPane.ERROR_MESSAGE);	
+						}
+						else {
+							lastNumCheck = aNum.substring(aNum.length()-4);
+							break;
+							}
+
+						}//End of While Loop
+						
+
+						/*	System.out.println("Routing Number: " + rNum); //Debugging
+						System.out.println("Account Number: " + aNum); //Debugging
+						System.out.println("Last 4 digits of Account Number: " + lastNumCheck); //Debugging */
+						
+					
+				}//End Of Action Event
+			});//End of Action Listener
+	
+			creditCard.addActionListener(new ActionListener() { //Credit Card Button
+				public void actionPerformed(ActionEvent e) {
+		
+		nameCard = "";
+		cvvCard= "";
+		numberCard= "";
+		dateCard = "";	
+		
+		while (nameCard.length() == 0) {
+
+			nameCard = JOptionPane.showInputDialog("Name On Card", null);
+
+			if (nameCard.length()== 0) {
+				JOptionPane.showMessageDialog(null, "Cannot Be Empty, Input Again", "Alert", JOptionPane.ERROR_MESSAGE);
+			}
+			else {
+				break;
 				}
-			});	
-		}	
+
+			}//End of While Loop
+
+			
+			
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			while (numberCard.length() == 0 || numberCard.length() != 16) {
+
+				numberCard = JOptionPane.showInputDialog("Card Number", null);
+
+				if (numberCard.length()== 0) {
+					JOptionPane.showMessageDialog(null, "Cannot Be Empty, Input Again", "Alert", JOptionPane.ERROR_MESSAGE);
+				}
+				else if (numberCard.length() != 16) {
+					JOptionPane.showMessageDialog(null, "Card Number Must be 16 Digits", "Alert", JOptionPane.ERROR_MESSAGE);	
+					}
+				else {
+					lastNumCard = numberCard.substring(numberCard.length()-4);
+					break;
+					}
+
+				}//End of While Loop
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				while (dateCard.length() == 0) {
+
+					dateCard = JOptionPane.showInputDialog("Date On Card", null);
+
+					if (dateCard.length()== 0) {
+						JOptionPane.showMessageDialog(null, "Cannot Be Empty, Input Again", "Alert", JOptionPane.ERROR_MESSAGE);
+					}
+					else {
+						break;
+						}
+
+					}//End of While Loop
+
+					
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				while (cvvCard.length() == 0 || cvvCard.length() != 3) {
+
+					cvvCard = JOptionPane.showInputDialog("CVV", null);
+
+					if (cvvCard.length()== 0) {
+						JOptionPane.showMessageDialog(null, "Cannot Be Empty, Input Again", "Alert", JOptionPane.ERROR_MESSAGE);
+					}
+					else if (cvvCard.length() != 3) {
+						JOptionPane.showMessageDialog(null, "CVV Must be 3 Digits", "Alert", JOptionPane.ERROR_MESSAGE);	
+						}
+					else {
+						break;
+						}
+
+					}//End of While Loop			
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			
+		/*	System.out.println("Card Name: " + nameCard); //Debugging
+			System.out.println("Card Number: " + numberCard); //Debugging
+			System.out.println("Card Date: " + dateCard); //Debug
+			System.out.println("Card CVV: " + cvvCard); //Debug
+			System.out.println("Last 4 Digits of Credit Card: "+ lastNumCard);//Debug */
+				
+				
+				}//End Of Action Event
+			});//End of Action Listener
+			
+
+		}	//End of Event
 	public void Equalize()
 	{
 		firstName = first.getText();
@@ -224,7 +437,133 @@ public class checkoutClass extends JPanel {
         //JOptionPane.showMessageDialog(null, "Woah! Bad input, numbers only!");     
 	}
 			//int.parseint(cellNum)
+	
+	
+	 public String addTotal() {
+		
+		 				String str = shipArea.getText(); 
+						String str1 = taxArea.getText();
+						String str2 = totalPrice.getText();
+						  
+						 String one = str.substring(1);
+						 String two = str1.substring(1);
+						 String three = str2.substring(1);
+						 
+						 double x = Double.valueOf(one);
+						 double y = Double.valueOf(two);
+						 double z = Double.valueOf(three);
+							
+						//	System.out.println(x);
+						//	System.out.println(y);
+							//System.out.println(z);
+						
+							total = x+y+z;
+						
+							Formatter formatter = new Formatter();
+					        formatter.format("%.2f", total);
+						
+							System.out.println(formatter.toString());
+						
+							totalArea.setText("$" + formatter.toString());
+					 add = totalArea.getText();
+		return add;
+	} //End of Add total method
+	
+	
+	public void overallCheck() {
+		
+		if (rNum == null && nameCard == null) {
+			JOptionPane.showMessageDialog(null, "Payment Cannot be left Empty", "Alert", JOptionPane.ERROR_MESSAGE);
+		}
+		else if (nameCard != null && rNum == null) {
+		
+		if (cvvCard == null) {
+			JOptionPane.showMessageDialog(null, "CVV Cannot be left Empty", "Alert", JOptionPane.ERROR_MESSAGE);		
+		}
+		 if (dateCard == null) {
+			JOptionPane.showMessageDialog(null, "Card Date Cannot be left Empty", "Alert", JOptionPane.ERROR_MESSAGE);		
+		}
+		else if (numberCard == null) {
+			JOptionPane.showMessageDialog(null, "Card Number Cannot be left Empty", "Alert", JOptionPane.ERROR_MESSAGE);		
+		}
+		else if (cvvCard != null){
+			System.out.println("Card Name: " + nameCard); //Debugging
+			System.out.println("Card Number: " + numberCard); //Debugging
+			System.out.println("Card Date: " + dateCard); //Debug
+			System.out.println("Card Cvv: " + cvvCard); //Debug
+			System.out.println("Last 4 Digits: "+ lastNumCard); //Debug
+		}
+		
+			}
 			
+			else if (rNum != null && nameCard == null) {
+			if(aNum == null) {
+		    JOptionPane.showMessageDialog(null, "Account Number Cannot be left Empty", "Alert", JOptionPane.ERROR_MESSAGE);		
+			}
+			else {
+			System.out.println("Routing Number: " + rNum); //Debugging
+			System.out.println("Account Number: " + aNum); //Debugging
+			System.out.println("Last 4 digits of Account Number: " + lastNumCheck); //Debugging
+			}
+	}
+			
+			
+			else if (rNum != null && nameCard != null){
+		
+				rNum=null;
+				aNum=null;
+				nameCard=null;
+				numberCard=null;
+				dateCard=null;
+				cvvCard=null;
+				
+JOptionPane.showMessageDialog(null, "Please only Pick One Payment Type!", "Alert", JOptionPane.ERROR_MESSAGE);	
+			}
+		}//end of overallCheck
+	
+	public void conformationEmail() {
+		
+		if (rNum != null && nameCard == null) {
+			System.out.println("Thank You "+ getFullName()+"!");//First and Last name
+			System.out.println(getAddress()); //Address
+			System.out.println(getCity()); //City
+			System.out.println(getState()); //State
+			System.out.println(getEmail()); //Email
+			System.out.println("Payment Type is E-check: " + lastNumCheck);  //Last 4 Numbers of check
+			System.out.println(add); //Overall total
+			
+			JOptionPane.showMessageDialog(null, 
+					"Thank You "+ getFullName()+"!\n" + "Your Items Will be Sent to This address: \n" +
+							getAddress() + " " + getCity()+ ", "+ getState() +"\n" +
+							"They will be sent to: "+ getEmail() +"\n" + 
+							"Payment Type is E-check ending in: " + lastNumCheck + "\n" +
+							"The Grand Total: " + add);
+			
+			
+		}
+		
+		else if(nameCard != null && rNum == null) {
+			
+			System.out.println("Thank You "+ getFullName()+"!"); //First and Last name
+			System.out.println(getAddress()); //Address
+			System.out.println(getCity()); //City
+			System.out.println(getState()); //State
+			System.out.println(getEmail()); //Email
+			
+			System.out.println("Payment Type is Credit Card: "+ lastNumCard); //Last 4 Numbers of card
+			System.out.println("The Grand Total: "+ add); //Overall total
+			
+			JOptionPane.showMessageDialog(null, 
+					"Thank You "+ getFullName()+"!\n" + "Your Items Will be Sent to This address: \n" +
+							getAddress() + " " + getCity()+ ", "+ getState() +"\n" +
+							"They will be sent to: "+ getEmail() +"\n" + 
+							"Payment Type is Credit Card ending in: " + lastNumCard + "\n" +
+							"The Grand Total: " + add);
+			
+		}			
+		
+	}//End if COnformation Email
+	
 	public boolean checkEmail()
 	{
 		if(email.length() == 0)
@@ -398,8 +737,8 @@ public class checkoutClass extends JPanel {
 		taxArea = new JTextArea();
 		taxArea.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		
-		textArea_2 = new JTextArea();
-		textArea_2.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		shipArea = new JTextArea();
+		shipArea.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		
 		emailAddress = new JTextField();
 		emailAddress.setColumns(10);
@@ -412,17 +751,22 @@ public class checkoutClass extends JPanel {
 		
 		lblNewLabel_3 = new JLabel("Shipping:");
 		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("7-10 Days Standard Shipping");
-		rdbtnNewRadioButton.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		standard = new JRadioButton("7-10 Days Standard Shipping");
+		buttonGroup.add(standard);
+		standard.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		
-		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("3-Day Shipping");
-		rdbtnNewRadioButton_1.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		fast = new JRadioButton("3-Day Shipping");
 		
-		JRadioButton rdbtnNewRadioButton_2 = new JRadioButton("Next Day Shipping");
-		rdbtnNewRadioButton_2.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		buttonGroup.add(fast);
+		fast.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		
-		textArea_3 = new JTextArea();
-		textArea_3.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		rush = new JRadioButton("Next Day Shipping");
+		
+		buttonGroup.add(rush);
+		rush.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		
+		totalArea = new JTextArea();
+		totalArea.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		
 		lblNewLabel_4 = new JLabel("Grand Total:");
 		
@@ -430,14 +774,16 @@ public class checkoutClass extends JPanel {
 		
 		lblNewLabel_6 = new JLabel("Products to Checkout");
 		
-		rdbtnNewRadioButton_3 = new JRadioButton("Credit/Debit Card");
-		rdbtnNewRadioButton_3.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		
-		rdbtnNewRadioButton_4 = new JRadioButton("Electronic Check");
-		rdbtnNewRadioButton_4.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		
 		lblNewLabel_7 = new JLabel("* Secure payment info will be entered after selection is made from above");
 		lblNewLabel_7.setFont(new Font("Lucida Grande", Font.ITALIC, 9));
+		
+		creditCard = new JButton("Credit Card");
+		creditCard.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		
+		eCheck = new JButton("E-Check");
+		eCheck.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		
+		
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -448,11 +794,11 @@ public class checkoutClass extends JPanel {
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addGroup(groupLayout.createSequentialGroup()
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(rdbtnNewRadioButton)
+									.addComponent(standard)
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(rdbtnNewRadioButton_1)
+									.addComponent(fast)
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(rdbtnNewRadioButton_2))
+									.addComponent(rush))
 								.addGroup(groupLayout.createSequentialGroup()
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 										.addGroup(groupLayout.createSequentialGroup()
@@ -473,23 +819,23 @@ public class checkoutClass extends JPanel {
 										.addGroup(groupLayout.createSequentialGroup()
 											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 												.addComponent(phone, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
-												.addComponent(cellNum, GroupLayout.PREFERRED_SIZE, 96, GroupLayout.PREFERRED_SIZE))
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-												.addComponent(emailAddress, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-												.addComponent(lblNewLabel))
-											.addPreferredGap(ComponentPlacement.UNRELATED)
-											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+												.addComponent(cellNum, GroupLayout.PREFERRED_SIZE, 96, GroupLayout.PREFERRED_SIZE)
 												.addGroup(groupLayout.createSequentialGroup()
-													.addComponent(cityName, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)
-													.addGap(47))
-												.addComponent(city1, GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)))
-										.addGroup(groupLayout.createSequentialGroup()
+													.addGap(4)
+													.addComponent(creditCard)))
 											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(rdbtnNewRadioButton_3)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(rdbtnNewRadioButton_4)
-											.addGap(52)))
+											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+												.addComponent(eCheck, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)
+												.addGroup(groupLayout.createSequentialGroup()
+													.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+														.addComponent(emailAddress, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
+														.addComponent(lblNewLabel))
+													.addPreferredGap(ComponentPlacement.UNRELATED)
+													.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+														.addGroup(groupLayout.createSequentialGroup()
+															.addComponent(cityName, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)
+															.addGap(47))
+														.addComponent(city1, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))))))
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 										.addComponent(zip, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
@@ -500,31 +846,29 @@ public class checkoutClass extends JPanel {
 										.addComponent(zipNum, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE))
 									.addGap(68))))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+							.addGap(106)
+							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(106)
-									.addGroup(groupLayout.createSequentialGroup()
-										.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-											.addGroup(groupLayout.createSequentialGroup()
-												.addComponent(lblNewLabel_4)
-												.addPreferredGap(ComponentPlacement.UNRELATED)
-												.addComponent(textArea_3, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE))
-											.addGroup(groupLayout.createSequentialGroup()
-												.addComponent(lblNewLabel_3)
-												.addPreferredGap(ComponentPlacement.UNRELATED)
-												.addComponent(textArea_2, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE))
-											.addGroup(groupLayout.createSequentialGroup()
-												.addComponent(lblNewLabel_2)
-												.addPreferredGap(ComponentPlacement.UNRELATED)
-												.addComponent(taxArea, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE))
-											.addGroup(groupLayout.createSequentialGroup()
-												.addComponent(lblNewLabel_1)
-												.addPreferredGap(ComponentPlacement.UNRELATED)
-												.addComponent(totalPrice, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE))
-											.addComponent(checkoutList, GroupLayout.PREFERRED_SIZE, 274, GroupLayout.PREFERRED_SIZE))
-										.addPreferredGap(ComponentPlacement.UNRELATED)))
-								.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-									.addContainerGap()
+									.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+										.addGroup(groupLayout.createSequentialGroup()
+											.addComponent(lblNewLabel_4)
+											.addPreferredGap(ComponentPlacement.UNRELATED)
+											.addComponent(totalArea, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE))
+										.addGroup(groupLayout.createSequentialGroup()
+											.addComponent(lblNewLabel_3)
+											.addPreferredGap(ComponentPlacement.UNRELATED)
+											.addComponent(shipArea, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE))
+										.addGroup(groupLayout.createSequentialGroup()
+											.addComponent(lblNewLabel_2)
+											.addPreferredGap(ComponentPlacement.UNRELATED)
+											.addComponent(taxArea, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE))
+										.addGroup(groupLayout.createSequentialGroup()
+											.addComponent(lblNewLabel_1)
+											.addPreferredGap(ComponentPlacement.UNRELATED)
+											.addComponent(totalPrice, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE))
+										.addComponent(checkoutList, GroupLayout.PREFERRED_SIZE, 274, GroupLayout.PREFERRED_SIZE))
+									.addPreferredGap(ComponentPlacement.UNRELATED))
+								.addGroup(groupLayout.createSequentialGroup()
 									.addComponent(lblNewLabel_6)
 									.addGap(74)))
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
@@ -548,32 +892,32 @@ public class checkoutClass extends JPanel {
 						.addComponent(checkoutList, GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE)
 						.addComponent(checkoutQuantity, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
-					.addGroup(groupLayout.createSequentialGroup()
-						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-							.addComponent(totalPrice, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(lblNewLabel_1))
-						.addGap(12)
-						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-							.addComponent(taxArea, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-							.addComponent(lblNewLabel_2))
-						.addGap(12)
-						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-							.addComponent(textArea_2, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-							.addComponent(lblNewLabel_3))
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-							.addComponent(textArea_3, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-							.addComponent(lblNewLabel_4)))
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(totalPrice, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblNewLabel_1))
+					.addGap(12)
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(taxArea, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblNewLabel_2))
+					.addGap(12)
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(shipArea, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblNewLabel_3))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(totalArea, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblNewLabel_4))
 					.addGap(24)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(rdbtnNewRadioButton)
-						.addComponent(rdbtnNewRadioButton_1)
-						.addComponent(rdbtnNewRadioButton_2))
-					.addGap(26, 26, Short.MAX_VALUE)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(firstName, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lastName, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
-						.addComponent(stateInitials, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
+						.addComponent(standard)
+						.addComponent(fast)
+						.addComponent(rush))
+					.addPreferredGap(ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+							.addComponent(firstName, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lastName, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
+							.addComponent(stateInitials, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE))
 						.addComponent(address, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
@@ -600,8 +944,8 @@ public class checkoutClass extends JPanel {
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(30)
 							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(rdbtnNewRadioButton_3)
-								.addComponent(rdbtnNewRadioButton_4))
+								.addComponent(creditCard)
+								.addComponent(eCheck, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
 							.addGap(18)
 							.addComponent(lblNewLabel_7)))
 					.addGap(41))
