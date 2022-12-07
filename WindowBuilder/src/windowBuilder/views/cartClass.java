@@ -53,7 +53,7 @@ public class cartClass extends JPanel {
 	private JButton btnAddItem; //button that adds a quanity of one to a product in the Cart
 	private JButton btnCheckoutNow; //button that initiates the checkout process
 	
-	private static int counter = 0; //int variable that is used in the addCartprice() method
+	public static int counter = 0; //int variable that is used in the addCartprice() method
 	public static int sum; ////int variable that is used in the addCartprice() method and rearrangeArray() method	
 	public static boolean check = true; //boolean variable used for the 'btnRemoveItem' action method
 	
@@ -164,22 +164,31 @@ public class cartClass extends JPanel {
 	public static void rearrangeCart(int element) { //method that rearranges the cartPriceArray when an item is removed
 		
 		int[] cartPriceArray2 = new int[cartPriceArray.length -1]; //initializes the temp cartPriceArray2 to the length of cartPriceArray.length -1]
-		for(int i = 0, k = 0; i < cartPriceArray.length; i++){ //loop each element of cartPriceArray
-			if(cartPriceArray[i] != element){ //if statement; if cartPriceArray at index i does not equal parameter x
+		
+		try {
+			for(int i = 0, k = 0; i < cartPriceArray.length; i++){ //loop each element of cartPriceArray
+				if(cartPriceArray[i] != element){ //if statement; if cartPriceArray at index i does not equal parameter x
 				cartPriceArray2[k] = cartPriceArray[i];	//if statement is true, then load cartPriceArray2 at index k with cartPriceArray at index i
 				k++; //increment k
-			}			
+				}			
+			}
 		}
-		cartPriceArray = cartPriceArray2; //after for loop, set cartPriceArray[] to temp cartPriceArray2[]	
-		int addedUp = Arrays.stream(cartPriceArray).sum(); //add  up the total sum of cartPriceArray and set it to temp int variable: addedUp		
-		if (addedUp == 0) {	//if addUp is equal to 0			
-			textAreaCartTotal.setText("$0.00"); //this resets the textAreaCartTotal box back to empty
-			cartPriceArray = new int[15]; // this resets the cartPriceArray[]
-			trackPrices = new String[20];
-			counter = 0; //this resets the variabale counter
-			sum = 0; //this resets the variable sum			
+		catch(Exception e) {
+			
+			System.out.println("Price does not exist in array...");
 		}
-
+		
+		finally {
+			cartPriceArray = cartPriceArray2; //after for loop, set cartPriceArray[] to temp cartPriceArray2[]	
+			int addedUp = Arrays.stream(cartPriceArray).sum(); //add  up the total sum of cartPriceArray and set it to temp int variable: addedUp		
+				if (addedUp == 0) {	//if addUp is equal to 0			
+					textAreaCartTotal.setText("$0.00"); //this resets the textAreaCartTotal box back to empty
+					cartPriceArray = new int[15]; // this resets the cartPriceArray[]
+					trackPrices = new String[20];
+					counter = 0; //this resets the variabale counter
+					sum = 0; //this resets the variable sum			
+				}
+		}
 	}
 	
 	/**
