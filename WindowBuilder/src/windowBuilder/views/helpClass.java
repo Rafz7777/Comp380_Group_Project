@@ -86,7 +86,7 @@ public class helpClass extends JPanel {
 		/// CODE FOR SEND BUTTON ///
 		btnSend.addActionListener(new ActionListener() {
 			
-			// Send Button Clicked (4.8/5)
+			// Send Button Clicked
 			public void actionPerformed(ActionEvent e) {
 				
 				// Checks to see if the email address is valid.
@@ -115,8 +115,6 @@ public class helpClass extends JPanel {
 				// Clear fields and open Home Pane
 				emailArea.setText("");
 				addressField.setText("");
-				
-				//eCommerceMain.setPane(0); // TODO: Request Ralph to allow me to add this method to eCommerceMain]
 				
 			}
 					

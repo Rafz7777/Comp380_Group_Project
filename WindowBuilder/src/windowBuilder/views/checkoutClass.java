@@ -6,7 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-
+import java.io.FileWriter;
+import java.io.IOException;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -17,7 +18,6 @@ import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
-//Ralph's-Branch---Contains-all-classes-I'm-working-on
 import javax.swing.border.BevelBorder;
 import javax.swing.JTextArea;
 import javax.swing.JRadioButton;
@@ -29,10 +29,8 @@ import java.util.Formatter;
 /**
  * The goal of the Checkout class is to do what for many people is at the end of the shopping experience
  * 
- * 
- *  
  * @author Aaron Flores, Christatian Sanchez, Matthew Bellman
- * @version 2022.12.XX
+ * @version 2022.12.06
  */
 
 //Customer-Specifics
@@ -131,20 +129,6 @@ public class checkoutClass extends JPanel {
 	private JRadioButton rush;
 	/////////////////////////////////
 	
-	//Customer-Specifics
-
-	/*public void addListeners()
-	{
-		enter.addActionListener(new ActionListener())
-		{
-			@Override
-        	public void actionPerformed(ActionEvent e) 
-			{
-
-			}
-
-		}
-	}*/
 	
 	/**
 	 * Moves the Cart list to the checkout List (same with quantity)
@@ -162,6 +146,10 @@ public class checkoutClass extends JPanel {
 		DecimalFormat shorten = new DecimalFormat("#.00");
 
 		String taxTransfer = shorten.format(taxTot);
+		
+		// If the taxTransfer is less then 1 (can be done with only one or two cassette tapes in checkout.)
+		if (taxTransfer.charAt(0) == '.')
+			taxTransfer = "0".concat(taxTransfer);
 		taxArea.setText("$"+ taxTransfer);
 
 
@@ -276,7 +264,6 @@ public class checkoutClass extends JPanel {
 			public void actionPerformed(ActionEvent e) 
 			{
 
-
 				try
 				{
 
@@ -345,7 +332,11 @@ public class checkoutClass extends JPanel {
 				if (!overallCheck())
 					return;
 				
-				confirmationEmail();
+				try {
+					confirmationEmail();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 				
 				resetPanel();
 
@@ -437,12 +428,6 @@ public class checkoutClass extends JPanel {
 
 				}//End of While Loop
 
-
-				/*	System.out.println("Routing Number: " + rNum); //Debugging
-						System.out.println("Account Number: " + aNum); //Debugging
-						System.out.println("Last 4 digits of Account Number: " + lastNumCheck); //Debugging */
-
-
 			}//End Of Action Event
 		});//End of Action Listener
 
@@ -525,13 +510,6 @@ public class checkoutClass extends JPanel {
 				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-				/*	System.out.println("Card Name: " + nameCard); //Debugging
-			System.out.println("Card Number: " + numberCard); //Debugging
-			System.out.println("Card Date: " + dateCard); //Debug
-			System.out.println("Card CVV: " + cvvCard); //Debug
-			System.out.println("Last 4 Digits of Credit Card: "+ lastNumCard);//Debug */
-
-
 			}//End Of Action Event
 		});//End of Action Listener
 
@@ -548,10 +526,8 @@ public class checkoutClass extends JPanel {
 		zipCode = zipNum.getText();
 		phoneNum = cellNum.getText();
 		email = emailAddress.getText();
-
-		//JOptionPane.showMessageDialog(null, "Woah! Bad input, numbers only!");     
+   
 	}
-	//int.parseint(cellNum)
 
 
 	private String addTotal() {
@@ -568,19 +544,16 @@ public class checkoutClass extends JPanel {
 		double y = Double.valueOf(two);
 		double z = Double.valueOf(three);
 
-		//	System.out.println(x);
-		//	System.out.println(y);
-		//System.out.println(z);
-
 		total = x+y+z;
-
-		@SuppressWarnings("resource")
+		
 		Formatter formatter = new Formatter();
 		formatter.format("%.2f", total);
 
 		System.out.println(formatter.toString());
 
 		totalArea.setText("$" + formatter.toString());
+		formatter.close();
+		
 		add = totalArea.getText();
 		return add;
 	} //End of Add total method
@@ -645,9 +618,7 @@ public class checkoutClass extends JPanel {
 		
 	}//end of overallCheck
 
-	/// TODO: (R) Re-factor This ///
-	private void confirmationEmail() {
-
+	private void confirmationEmail() throws IOException {
 		
 		// (Internal) E-Check
 		if (nameCard == null) {
@@ -658,10 +629,7 @@ public class checkoutClass extends JPanel {
 							"A confirmation email will be sent to: "+ getEmail() +"\n" + 
 							"Payment Type is E-check ending in: " + lastNumCheck + "\n" +
 							"The Grand Total: " + add);
-		}
-
-		// (Internal) Credit-Card
-		else {
+		} else { // (Internal) Credit-Card
 
 			JOptionPane.showMessageDialog(null, 
 					"Thank You "+ getFullName()+"!\n" + "Your Items Will be Sent to This address: \n" +
@@ -672,12 +640,15 @@ public class checkoutClass extends JPanel {
 		}
 		
 		// (External) Confirmation Email
+		
+		FileWriter emailWriter = new FileWriter((System.getProperty("user.dir")) + "purchaseEmail.txt");
+		
 		LocalDateTime date = LocalDateTime.now();
 		
-		System.out.println("To: " + getEmail() + "\n\n");
+		emailWriter.write("To: " + getEmail() + "\n\n\n");
 
-		System.out.println("Hello, " + getFullName() + "\n");
-		System.out.println("We would like to thank you for purchasing from Vintage Curios. This automated email also serves as your receipt.\n\n");
+		emailWriter.write("Hello, " + getFullName() + "\n\n");
+		emailWriter.write("We would like to thank you for purchasing from Vintage Curios. This automated email also serves as your receipt.\n\n\n");
 
 		for (int i = 0; i < shoppingList.getSize(); i++) {
 			
@@ -686,30 +657,30 @@ public class checkoutClass extends JPanel {
 			int price_i = (int) Float.parseFloat(list_i.substring(list_i.indexOf("$") + 1));
 			int quantity_i = Integer.parseInt(quantityList.getElementAt(i).toString());
 			
-			System.out.println(list_i.substring(0, list_i.indexOf("-")) + "x" + quantity_i + " | $"
-					   + (price_i * quantity_i) + ".00");
+			emailWriter.write(list_i.substring(0, list_i.indexOf("-")) + "x" + quantity_i + " | $"
+					   + (price_i * quantity_i) + ".00\n");
 		}
 
 		
-		System.out.println("\nTax: " + taxArea.getText());
-		System.out.print("Shipping: " + shipArea.getText());
-		System.out.println("Total (including tax and payment method): " + totalArea.getText());
-		System.out.print("Method of payment: ");
+		emailWriter.write("\nTax: " + taxArea.getText());
+		emailWriter.write("\nShipping: " + shipArea.getText());
+		emailWriter.write("\nTotal (including tax and payment method): " + totalArea.getText());
+		emailWriter.write("\nMethod of payment: ");
 
 		if (aNum == null) {
-			System.out.println("Credit/Debit Card");
-			System.out.println("Card: ************" + lastNumCard);
+			emailWriter.write("Credit/Debit Card\n");
+			emailWriter.write("Card: ************" + lastNumCard);
 		} else {
-			System.out.println("Electronic Check");
-			System.out.println("Account Number: ***********" + lastNumCheck);
+			emailWriter.write("Electronic Check\n");
+			emailWriter.write("Account Number: ***********" + lastNumCheck);
 		}
 		
-		System.out.println("Delivery Location: " + getAddress() + " " + getCity() + ", " + getState());
+		emailWriter.write("\nDelivery Location: " + getAddress() + " " + getCity() + ", " + getState());
 			
 		String currentDate = date.toString();
-		System.out.println("Date of purchase: " + currentDate.substring(0,currentDate.indexOf('T')) + "\n\n");
+		emailWriter.write("\nDate of purchase: " + currentDate.substring(0,currentDate.indexOf('T')) + "\n\n\n");
 
-		System.out.print("You should expect your products to arrive ");
+		emailWriter.write("You should expect your products to arrive ");
 
 		String Delivery1;
 		if (!standard.isSelected()) {
@@ -719,140 +690,149 @@ public class checkoutClass extends JPanel {
 			else
 				Delivery1 = date.plusDays(1).toString();
 
-			System.out.print("by or before " + Delivery1.substring(0,Delivery1.indexOf('T')) + ".");
+			emailWriter.write("by or before " + Delivery1.substring(0,Delivery1.indexOf('T')) + ".");
 
 		} else {
 
 			Delivery1 = date.plusDays(7).toString();
 			String Delivery2 = date.plusDays(10).toString();
-			System.out.print("between " + Delivery1.substring(0,Delivery1.indexOf('T'))
+			emailWriter.write("between " + Delivery1.substring(0,Delivery1.indexOf('T'))
 				+ " and " + Delivery2.substring(0,Delivery2.indexOf('T')) + "or sooner.");
 		}
 
-		System.out.println(" If for some reason there is a delay with your delivery, we will update you with a new delivery date.\n");
-		System.out.println("If you have any questions about your order, you can contact us either through the help panel or from our email address: support@vintage.curios\n");
-		System.out.print("Once again, thank you for purchasing from Vintage Curios.");
+		emailWriter.write(" If for some reason there is a delay with your delivery, we will update you with a new delivery date.\n\n");
+		emailWriter.write("If you have any questions about your order, you can contact us either through the help panel or from our email address: support@vintage.curios\n\n");
+		emailWriter.write("Once again, thank you for purchasing from Vintage Curios.");
+		
+		emailWriter.close();
 
 	}//End if confirmation Email
 
 	
-	// TODO: Re-factor the checks
-	public boolean checkEmail() // !email.isEmpty()
+	private boolean checkEmail()
 	{
-		if(email.length() == 0)
+		/*if(email.length() == 0)
 		{
 			return false;
 		}
 		else 
 		{
 			return true;
-		}
+		}*/
+		return !email.isEmpty();
 	}
-	public boolean checkZip() // zipCode.length() == 5
+	private boolean checkZip()
 	{				 
-		if(zipCode.length() != 5 )
+		/*if(zipCode.length() != 5 )
 		{
 			return false;
 		}
 		else
 		{
 			return true;
-		}
+		}*/
+		return zipCode.length() == 5;
 	}
 
-	public boolean checkPhone() // phoneNum.length() == 10
+	private boolean checkPhone()
 	{
-		if(phoneNum.length() != 10 )
+		/*if(phoneNum.length() != 10 )
 		{
 			return false;
 		}
 		else
 		{
 			return true;
-		}
+		}*/
+		return phoneNum.length() == 10;
 	}
 
-	public boolean checkFirst() // !firstName.isEmpty()
+	private boolean checkFirst()
 	{
-		if(firstName.length() == 0 )
+		/*if(firstName.length() == 0 )
 		{
 			return false;
 		}
 		else
 		{
 			return true;
-		}
+		}*/
+		return !firstName.isEmpty();
 	}
 
-	public boolean checkLast() // !lastName.isEmpty()
+	private boolean checkLast()
 	{
-		if(lastName.length() == 0 )
+		/*if(lastName.length() == 0 )
 		{
 			return false;
 		}
 		else
 		{
 			return true;
-		}
+		}*/
+		return !lastName.isEmpty();
 	}
 
-	public boolean checkAddress() // !address.isEmpty()
+	private boolean checkAddress()
 	{
-		if(address.length() == 0 )
+		/*if(address.length() == 0 )
 		{
 			return false;
 		}
 		else
 		{
 			return true;
-		}
+		}*/
+		return !address.isEmpty();
 	}
 
-	public boolean checkCity() // !city.isEmpty()
+	private boolean checkCity()
 	{
-		if(city.length() == 0 )
+		/*if(city.length() == 0 )
 		{
 			return false;
 		}
 		else
 		{
 			return true;
-		}
+		}*/
+		return !city.isEmpty();
 	}
 
-	public boolean checkState() // state.length() == 2
+	private boolean checkState()
 	{
-		if(state.length() != 2 )
+		/*if(state.length() != 2 )
 		{
 			return false;
 		}
 		else
 		{
 			return true;
-		}
+		}*/
+		return state.length() == 2;
 	}
 
-	public String getFullName()
+	private String getFullName()
 	{
 		return firstName + " " + lastName;
 	}
 
-	public String getAddress()
+	private String getAddress()
 	{
 		return address;
 	}
 
-	public String getCity()
+	private String getCity()
 	{
 		return city;
 	}
 
-	public String getState()
+	private String getState()
 	{
 		return state;
 	}
 
-	public String getEmail()
+	private String getEmail()
 	{
 		return email;
 	}
