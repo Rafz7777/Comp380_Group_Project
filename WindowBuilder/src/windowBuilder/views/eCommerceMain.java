@@ -81,8 +81,10 @@ public class eCommerceMain extends JFrame {
 	 * @throws FileNotFoundException 
 	 */
 	public eCommerceMain() throws FileNotFoundException {
+
 		
 		setResizable(false);
+
 		setTitle("Vintage Curios");
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -119,9 +121,11 @@ public class eCommerceMain extends JFrame {
 					.addComponent(lblLogo, GroupLayout.PREFERRED_SIZE, 474, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
 		);
+
 		
 		lblLogo.setIcon(new ImageIcon(this.getClass().getResource("/images/logo.png")));
-		
+
+
 		gl_home_panel.setVerticalGroup(
 			gl_home_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_home_panel.createSequentialGroup()
