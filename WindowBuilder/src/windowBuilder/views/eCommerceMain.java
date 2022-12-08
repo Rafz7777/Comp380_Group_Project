@@ -1,4 +1,3 @@
-
 package windowBuilder.views;
 
 import java.awt.EventQueue;
@@ -82,6 +81,10 @@ public class eCommerceMain extends JFrame {
 	 * @throws FileNotFoundException 
 	 */
 	public eCommerceMain() throws FileNotFoundException {
+
+		
+		setResizable(false);
+
 		setTitle("Vintage Curios");
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -97,14 +100,15 @@ public class eCommerceMain extends JFrame {
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 535, GroupLayout.PREFERRED_SIZE)
+					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 525, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 662, Short.MAX_VALUE)
-					.addContainerGap())
+					.addContainerGap()
+					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 638, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(38, Short.MAX_VALUE))
 		);
 		
 		JPanel home_panel = new JPanel();	
@@ -117,7 +121,11 @@ public class eCommerceMain extends JFrame {
 					.addComponent(lblLogo, GroupLayout.PREFERRED_SIZE, 474, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
 		);
-		lblLogo.setIcon(new ImageIcon(eCommerceMain.class.getResource("/images/logo.png")));
+
+		
+		lblLogo.setIcon(new ImageIcon(this.getClass().getResource("/images/logo.png")));
+
+
 		gl_home_panel.setVerticalGroup(
 			gl_home_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_home_panel.createSequentialGroup()
@@ -125,17 +133,14 @@ public class eCommerceMain extends JFrame {
 					.addComponent(lblLogo, GroupLayout.PREFERRED_SIZE, 573, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(26, Short.MAX_VALUE))
 		);
+		
 		home_panel.setLayout(gl_home_panel); //home tab	
 		
 		/////Add panels below/////////
 		tabbedPane.addTab("Home", homeIcon, home_panel,"Home");
-				
 		tabbedPane.addTab("Product Search", searchIcon, search_panel, "Click to search for products"); //Product Search tab
-		
 		tabbedPane.addTab("View Cart", cartIcon, cart_panel, "Click to view Cart"); //View Cart tab
-			
 		tabbedPane.addTab("Checkout", checkoutIcon, checkout_panel, "Click to view Checkout items"); //Checkout tab
-		
 		tabbedPane.addTab("Help", helpIcon, help_panel, "Click for help"); //help tab
 		contentPane.setLayout(gl_contentPane);
 	}
