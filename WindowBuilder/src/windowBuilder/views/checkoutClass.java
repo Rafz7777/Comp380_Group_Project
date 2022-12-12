@@ -17,7 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
-//Ralph's-Branch---Contains-all-classes-I'm-working-on
+
 import javax.swing.border.BevelBorder;
 import javax.swing.JTextArea;
 import javax.swing.JRadioButton;
@@ -26,12 +26,19 @@ import java.awt.Font;
 
 
 /**
- * The goal of the Checkout class is to do what for many people is at the end of the shopping experience
+ * The goal of the Checkout class is to do what for many people is at the end of the shopping experience where its will show<br>
+ * a customer's cart and allow a customer to input their information. This class interacts with eCommerceMain in order to be called upon and <br> 
+ *  display the cart and several textfield boxes for the user to interact with.<p>
  * 
- * 
+ * The class is virtually unused until the user wants to checkout an actual cart, but allows the user to go to the tab nonetheless.<p>
+ * The class should be having an interaction with the emailClass that Matthew is responsible for in order to be able to pull the information needed<br>
+ * for the class for a user friendly interaction between the two. Unsure if this class will contain the operations in which Christian is responsible for<br>   
+ *  it will either be implemented within this class or called upon from another class.<p>
+ *  
  *  
  * @author Aaron Flores
  *date Started 10/28
+ *@version 2022.11.12
  */
  //Customer-Specifics
 
@@ -40,6 +47,11 @@ public class checkoutClass extends JPanel {
 
 	/**
 	 * Create the panel.
+	 * the methods initLabel() and createEvents are called upon to actually display to the user<br> 
+	 * the Interface they will be using and familiarizing themselves with.<p> 
+	 * 
+	 * Two list are then initialized to display information received from cartClass to display<br>
+	 * for the customer.<p>
 	 */
 	public checkoutClass() {
 		
@@ -51,7 +63,16 @@ public class checkoutClass extends JPanel {
 		//setLayout(groupLayout);
 
 	}
-
+/**
+ * a substantial number of variables and textfields is are created an initialized.<p>
+ * created globally to be accessed by all methods as needed and each textfield has a corresponding<br>
+ * string in which the input will be extracted for easy use.<p>
+ * 
+ * The boolean variables created are used as the simple flag to be check to ensure user input is legible.<p>
+ * 
+ * all instances will be carrying the value they are describe by the name to make life easier for<br>
+ * then programmer
+ */
 	private  String firstName;
 	private  String lastName;
 	private  String address;
@@ -80,7 +101,7 @@ public class checkoutClass extends JPanel {
 	boolean emailCheck;
 	
 	private JButton enter;
- // Ralph's-Branch---Contains-all-classes-I'm-working-on
+ 
 	private static JList checkoutList;
 	private static JList checkoutQuantity;
 	private JTextArea textArea_2;
@@ -104,7 +125,6 @@ public class checkoutClass extends JPanel {
 	private static JTextArea totalPrice;
 	private static JTextArea taxArea;
 	
- //Customer-Specifics
 	
 	/*public void addListeners()
 	{
@@ -118,6 +138,13 @@ public class checkoutClass extends JPanel {
 		
 		}
 	}*/
+	
+	/**
+	 * This transferCart method is created to get the shopping cart from cartClass when a certain flag is<br> 
+	 * processed in this case the checkout button is pressed by the user thus calling this method transferring<br> 
+	 * the data from one list to this list display the contents of which to the customer when they head on to the<br>
+	 * to the checkout tab in the program.<p>
+	 */
 		public static void transferCart()
 		{
 			addTo(cartClass.CartList_items_2,shoppingList);
@@ -148,7 +175,12 @@ public class checkoutClass extends JPanel {
 		    }
 		}
 		
-		
+		/**
+		 * this method initializes event elements in the case of the user pressing a button, once the button is pressed<br>
+		 * it calls the equalize() method as well as the boolean methods used to check user input.<p>
+		 * It later reviews the results of the methods and if any problems are run into a pop-up message is displayed<br>
+		 * for the customer to explain the issue that was run into.<p>  
+		 */
 		private void createEvents() 
 		{ //this method initializes all event elements of the panel
 		
@@ -210,6 +242,10 @@ public class checkoutClass extends JPanel {
 				}
 			});	
 		}	
+		/**
+		 * The Equalize() method is used to just set the values of the variables to whatever the user<br>
+		 * had input into the textfields for later use.<p>  
+		 */
 	public void Equalize()
 	{
 		firstName = first.getText();
@@ -224,7 +260,13 @@ public class checkoutClass extends JPanel {
         //JOptionPane.showMessageDialog(null, "Woah! Bad input, numbers only!");     
 	}
 			//int.parseint(cellNum)
-			
+			/**
+			 * the next string of methods exist to check the various inputs of the user within the text fields<br>
+			 * most of the inputs check to ensure the user did type some sort of input then checkZip, checkPhone,<br>
+			 * and checkState to prevent wrong inputs so checkPhone ensure the user types 10 digits, checkZip is for<br>
+			 * 5 digits and checkState is for State 2-Letter abbreviations.<p>
+			 * @return
+			 */
 	public boolean checkEmail()
 	{
 		if(email.length() == 0)
@@ -320,6 +362,11 @@ public class checkoutClass extends JPanel {
 		}
 	}
 	
+	/**
+	 * These methods exists as easy getMethods intended for use by other classes, that may need<br>
+	 * to use the customer specifics like the emailClass.<p>
+	 * @return
+	 */
 	public String getFullName()
 	{
 		return firstName + " " + lastName;
@@ -345,6 +392,18 @@ public class checkoutClass extends JPanel {
 		return email;
 	}
 
+	/**
+	 * This method performs the built of the GUI creation and displays that the user interacts with <br>
+	 * labels are created and placed above the textfields to show guide the user in which to input what set<br>
+	 * of info.<p>
+	 * 
+	 * Along with the labels the corresponding textfield is also displayed and await interaction, everything else<br> 
+	 * like the pay button, or payment options will be available and displayed as radio buttons as a temporary look.<p>
+	 * Everything is set to a group layout as its looks like a better UI.
+	 * 
+	 * The shopping list is then displayed as was in the cart class tab, with its price and any other little<br>
+	 * additions like tax or shipping to display a grand Total for the User that is easy to understand.<p>
+	 */
 	private void initLabel()
 	{
 		JLabel firstName = new JLabel("First Name");

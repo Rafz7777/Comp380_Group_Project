@@ -78,9 +78,9 @@ public class productSearchClass extends JPanel {
 	private boolean shopMethod = true; //boolean use to track whattype of shopping method is being used. True for fast shopping, false for Shopping List
 	private boolean cartCheck = false;
 	
-	private static int add = 0; //incremented variable used as index for priceArray, used for btnAddList_1 action event 
-	private static int sum; // the sum total of the Shopping List
-	private static int counter = 0; //incremented variable used as index for addPrices() 
+	 static int add = 0; //incremented variable used as index for priceArray, used for btnAddList_1 action event 
+	 static int sum; // the sum total of the Shopping List
+	 static int counter = 0; //incremented variable used as index for addPrices() 
 	public static int increment = 0; //incremented variable used for trackPrices[] in this class and in cartClass.trackPrices[] 
 	
 	private JPanel panel_1; //panel that is used to hold all elements for the Shopping List option
