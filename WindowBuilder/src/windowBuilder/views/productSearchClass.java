@@ -1,4 +1,3 @@
-
 package windowBuilder.views;
 
 import javax.swing.JPanel;
@@ -34,8 +33,8 @@ import javax.swing.SwingConstants;
  * It features two modes that are selected by the user: Fast shopping that does not use a <br>
  * Shopping List and another option that does.<p>
  * 
- * The 'fast' shopping feature allows the user to browse a combo box which holds all products <br>
- * for sale.  The combo box displays ID, Name, and Price of product. Once an item is selected, <br>
+ * The 'fast' shopping feature alows the user to browse a combobox which holds all products <br>
+ * for sale.  The combobox displays ID, Name, and Price of product. Once an item is selected, <br>
  * an 'Add to Cart' button will move the selected product to the Cart. <p>
  * 
  * The 'Shopping List' option is selected by a radio button at the top of the panel.  Once <br>
@@ -381,7 +380,7 @@ public class productSearchClass extends JPanel {
 					}				
 				}
 							
-				for (int i=0; i<JListShopList.getModel().getSize(); i++) { //for-loop using the size of the 'JListShopList'					
+				for (int i=0; i<JListShopList.getModel().getSize(); i++) { //for-loop using the size of the 'JListShopList_1'					
 					if (ToProductSearchList_items_1.get(i) == verify) { //if-statement that checks to see if the selected item in the combobox that the user is trying to add to Shopping List is already there						
 						checkRepeats = true; //if the product is already in the Shopping list, set 'checkRepeats' to true
 						JOptionPane.showMessageDialog(null, "Already added to Shopping List!", "Alert", JOptionPane.ERROR_MESSAGE); //display pop-up message						
@@ -577,14 +576,14 @@ public class productSearchClass extends JPanel {
 												
 						ToCartShopList_items_3.removeElementAt(selectedIx);
 						ToProductSearchList_items_1.removeElementAt(selectedIx); //removes the Product from Shopping List at index specified by variable: 'index'
-						ToQuantityList_items_4.removeElementAt(selectedIx); //removes the quantity amount from quantity box at index specified by variable: 'index'																			
+						ToQuantityList_items_4.removeElementAt(selectedIx); //removes the quantity amounf from quantity box at index specified by variable: 'index'																			
 					
 					}
 					else { //if the quantity of the product to be removed is greater than 1, run the code
 						
 						Object evaluatedValue = ToQuantityList_items_4.getElementAt(selectedIx); //assign Object: 'evaluatedValue' to the element using index variable: 'image'				
 						int valueInt2 = Integer.parseInt(evaluatedValue.toString()); //convert Object to int
-						valueInt2 = valueInt2 - 1; //Subtract 'valueInt2' by 1 
+						valueInt2 = valueInt2 - 1; //subract 'valueInt2' by 1 
 						ToQuantityList_items_4.set( selectedIx, valueInt2); //adjust the quantity using index 'image' by inserting 'valueInt2'					
 												
 						removeOne(selectedIx); 			
@@ -620,62 +619,49 @@ public class productSearchClass extends JPanel {
 			}
 		});
 	
-		rdbtnUseList.addActionListener(new ActionListener() { // Radio button action method that toggles the Shopping List 
+		rdbtnUseList.addActionListener(new ActionListener() { //radio button action method that toggles on or off the Shopping List 
 			public void actionPerformed(ActionEvent e) {
 				
-				int x;
+				textAreaTotal.setText("$0.00"); //sets the inital value of Shopping List (textAreaTotal_1) upon first use
 				
-				// Checks to see if the cart is already empty
-				if (cartClass.JListCartList.getModel().getSize() == 0) {
-					x = 0;
-				} else {
-					String[] options = {"Yes", "No"};
-					x = JOptionPane.showOptionDialog(null, "This switch will remove any products already added to the Cart. Continue?",
-			                "ALERT", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, 0);
-				}
+				String[] options = {"No", "Yes"};
+				int x = JOptionPane.showOptionDialog(null, "This switch will remove any products already added to Cart. Continue?",
+		                "ALERT", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 				
-				
-
-				if (x == 1 && shopMethod == true) { // NO, don't empty the Cart while using the 'Fast" shopping method...
-						
-					//shopMethod = true;
+				if (x == 0 & shopMethod == true) { //NO, don't empty the Cart while using the 'Fast" shopping method...
+					
+					shopMethod = true;
 					check2 = true;
 					rdbtnUseList.setSelected(false);
+				}
+				if (x == 0 & shopMethod == false) { //NO, don't empty the Cart while using the Shopping List...
 					
-				} else if (x == 1 && shopMethod == false) { // NO, don't empty the Cart while using the Shopping List...
-					
-					//shopMethod = false;			
+					shopMethod = false;			
 					check2 = false;
 					rdbtnUseList.setSelected(false);
-					
-				} else if (x == -1) { // CLOSE, don't empty the Cart
-					
-					check2 = !(check2);
-					rdbtnUseList.setSelected(false);
-					
-				} else { // Otherwise, YES, empty the Cart and switch shopping method...
+				}
 				
-					cartClass.emptyCart();
-					textAreaTotal.setText("$0.00"); //sets the initial value of Shopping List (textAreaTotal_1) upon first use
+				//Otherwise, YES, empty the Cart and switch shopping method...
+				
+				cartClass.emptyCart();
 					
-					if (check2 == false) { //if check2 is false (off), run the code				
-						panel_1.setVisible(true); //turn on panel_1 (Shopping List option)
-						check2 = true; //set the check2 variable to true (on)				
-						panel_2.setVisible(false); //turn off panel_2 (btnAddCart button and associated label)	
-						rdbtnUseList.setSelected(true);
-						shopMethod = false;
-					} else {	//if check2 is true (on)				
-						panel_1.setVisible(false); //turn off panel_1 (Shopping List option)
-						check2 = false;	 //set the check2 variable to false (off)				
-						panel_2.setVisible(true); //turn on panel_2 (btnAddCart button and associated label)
-						shopMethod = true;
-					}
+				if (check2 == false) { //if check2 is false (off), run the code				
+					panel_1.setVisible(true); //turn on panel_1 (Shopping List option)
+					check2 = true; //set the check2 variable to true (on)				
+					panel_2.setVisible(false); //turn off panel_2 (btnAddCart button and associated label)	
+					rdbtnUseList.setSelected(true);
+					shopMethod = false;
+				}else {	//if check2 is true (on)				
+					panel_1.setVisible(false); //turn off panel_1 (Shopping List option)
+					check2 = false;	 //set the check2 variable to false (off)				
+					panel_2.setVisible(true); //turn on panel_2 (btnAddCart button and associated label)
+					shopMethod = true;
 				}
 				
 			}
 		});
 		
-		rdbtnSeeDescription.addActionListener(new ActionListener() { //radio button action method that toggles on or off the Product Description area
+		rdbtnSeeDescription.addActionListener(new ActionListener() { //radio button action method that togles on or off the Product Desciption area
 			public void actionPerformed(ActionEvent e) {
 				
 				if (check3 == false) {	//if check3 is false (off), run the code				
@@ -707,7 +693,7 @@ public class productSearchClass extends JPanel {
 	 * 
 	 * @throws FileNotFoundException
 	 */
-private void initComponents() throws FileNotFoundException { // Method that stores components
+	private void initComponents() throws FileNotFoundException { ////method that stores components
 		
 		JPanel panel = new JPanel();
 		GroupLayout groupLayout = new GroupLayout(this);
@@ -729,7 +715,7 @@ private void initComponents() throws FileNotFoundException { // Method that stor
 		cbProducts = new JComboBox<String>();
 		cbProducts.setMaximumRowCount(20);
 		
-		ToProductSearchList_items_1= new DefaultListModel<Object>();
+		ToProductSearchList_items_1 = new DefaultListModel<Object>();
 		ToCartShopList_items_3 = new DefaultListModel<Object>();
 		ToQuantityList_items_4 = new DefaultListModel<Object>();
 		
@@ -811,7 +797,6 @@ private void initComponents() throws FileNotFoundException { // Method that stor
 		lblNewLabel = new JLabel("Total = ");
 		
 		textAreaTotal = new JTextArea();
-		textAreaTotal.setEditable(false);
 		textAreaTotal.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		
 		btnAddToList = new JButton("Add Now");
@@ -849,7 +834,7 @@ private void initComponents() throws FileNotFoundException { // Method that stor
 		lblNoShipNotaxes = new JLabel("*Total does not include S&H or taxes");
 		lblNoShipNotaxes.setFont(new Font("Lucida Grande", Font.PLAIN, 9));
 		
-		JLabel lblNewLabel_1 = new JLabel("*Maximum 8 Products");
+		JLabel lblNewLabel_1 = new JLabel("*Maximum 8 Products (for now)");
 		lblNewLabel_1.setFont(new Font("Lucida Grande", Font.PLAIN, 9));
 	
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
@@ -867,11 +852,10 @@ private void initComponents() throws FileNotFoundException { // Method that stor
 										.addComponent(lblRemoveAllFromList)
 										.addComponent(lblNewLabel_2))
 									.addGap(4))
+								.addComponent(rdbtnSeeDescription)
 								.addGroup(gl_panel_1.createSequentialGroup()
-									.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-										.addComponent(rdbtnSeeDescription)
-										.addComponent(rdbtnSeeImage))
-									.addGap(13)))
+									.addComponent(rdbtnSeeImage)
+									.addGap(35)))
 							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_panel_1.createSequentialGroup()
 									.addGap(2)
@@ -880,19 +864,20 @@ private void initComponents() throws FileNotFoundException { // Method that stor
 											.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
 												.addComponent(btnRemoveOneItem)
 												.addComponent(btnRemoveAll, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE))
-											.addGap(45)
+											.addGap(18)
 											.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 212, GroupLayout.PREFERRED_SIZE))
 										.addGroup(gl_panel_1.createSequentialGroup()
 											.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
 												.addComponent(btnAddAllToCart)
 												.addComponent(btnAddOneToList))
-											.addPreferredGap(ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
+											.addGap(34)
 											.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
 												.addGroup(gl_panel_1.createSequentialGroup()
 													.addGap(12)
 													.addComponent(lblNewLabel)
 													.addPreferredGap(ComponentPlacement.RELATED)
-													.addComponent(textAreaTotal, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE))
+													.addComponent(textAreaTotal, GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)
+													.addGap(54))
 												.addComponent(lblNoShipNotaxes, GroupLayout.PREFERRED_SIZE, 186, GroupLayout.PREFERRED_SIZE))
 											.addGap(11))))
 								.addGroup(gl_panel_1.createSequentialGroup()
@@ -908,7 +893,7 @@ private void initComponents() throws FileNotFoundException { // Method that stor
 							.addComponent(btnAddToList, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(lblNewLabel_1)))
-					.addGap(19))
+					.addGap(21))
 				.addGroup(gl_panel_1.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 259, GroupLayout.PREFERRED_SIZE))
@@ -956,11 +941,11 @@ private void initComponents() throws FileNotFoundException { // Method that stor
 										.addComponent(lblRemoveAllFromList))
 									.addGap(12)))
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(panel_4, GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE))
+							.addComponent(panel_4, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 						.addGroup(gl_panel_1.createSequentialGroup()
 							.addGap(4)
 							.addComponent(lblNoShipNotaxes, GroupLayout.PREFERRED_SIZE, 13, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 244, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap(33, GroupLayout.PREFERRED_SIZE))
 		);
@@ -979,7 +964,6 @@ private void initComponents() throws FileNotFoundException { // Method that stor
 		scrollPaneQuantity.setViewportView(JListQuantity);
 		
 		txtpnProductDescription = new JTextPane();
-		txtpnProductDescription.setEditable(false);
 		txtpnProductDescription.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		
 		lblProductDescrip = new JLabel("Product Description");
@@ -990,12 +974,12 @@ private void initComponents() throws FileNotFoundException { // Method that stor
 				.addGroup(gl_panel_4.createSequentialGroup()
 					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel_4.createSequentialGroup()
-							.addGap(77)
-							.addComponent(lblProductDescrip, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_panel_4.createSequentialGroup()
 							.addContainerGap()
-							.addComponent(txtpnProductDescription, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+							.addComponent(txtpnProductDescription, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panel_4.createSequentialGroup()
+							.addGap(77)
+							.addComponent(lblProductDescrip, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(14, Short.MAX_VALUE))
 		);
 		gl_panel_4.setVerticalGroup(
 			gl_panel_4.createParallelGroup(Alignment.LEADING)
@@ -1003,11 +987,12 @@ private void initComponents() throws FileNotFoundException { // Method that stor
 					.addGap(10)
 					.addComponent(lblProductDescrip, GroupLayout.PREFERRED_SIZE, 13, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(txtpnProductDescription, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(37, Short.MAX_VALUE))
+					.addComponent(txtpnProductDescription, GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
+					.addGap(49))
 		);
 		panel_4.setLayout(gl_panel_4);
 	
+		
 		displayLabel = new JLabel("");
 		
 		lblImageDescrip = new JLabel("Product Image");
@@ -1045,5 +1030,10 @@ private void initComponents() throws FileNotFoundException { // Method that stor
 		panel.setLayout(gl_panel);
 		setLayout(groupLayout);
 		
+		
+		
 	}
 }
+
+
+
